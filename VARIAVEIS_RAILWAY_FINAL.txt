@@ -1,6 +1,6 @@
 # Variáveis de Ambiente Corrigidas para Railway
 # Copie e cole estas variáveis no Railway
-# ⚠️ IMPORTANTE: REMOVA as variáveis DATABASE_URL e REDIS_URL - elas são injetadas automaticamente pelo Railway
+# REMOVA as variáveis DATABASE_URL e REDIS_URL - elas são injetadas automaticamente pelo Railway
 
 APP_DEBUG="false"
 APP_ENV="production"
@@ -16,7 +16,7 @@ AWS_USE_PATH_STYLE_ENDPOINT="false"
 BCRYPT_ROUNDS="12"
 BROADCAST_CONNECTION="reverb"
 CACHE_STORE="database"
-DB_CONNECTION="pgsql"
+DB_CONNECTION="mysql"
 FILESYSTEM_DISK="local"
 LOG_CHANNEL="stack"
 LOG_LEVEL="error"
@@ -46,17 +46,17 @@ VITE_REVERB_PORT="443"
 VITE_REVERB_SCHEME="https"
 
 # ==========================================
-# VARIÁVEIS REMOVIDAS (não adicionar):
+# VARIÁVEIS QUE DEVEM SER REMOVIDAS:
 # ==========================================
-# DATABASE_URL - REMOVIDA (Railway injeta automaticamente quando PostgreSQL está conectado)
-# REDIS_URL - REMOVIDA (Railway injeta automaticamente quando Redis está conectado)
-# REDIS_HOST - REMOVIDA (Railway injeta automaticamente)
-# REDIS_PORT - REMOVIDA (Railway injeta automaticamente)
-# REDIS_PASSWORD - REMOVIDA
-# MAIL_PASSWORD - REMOVIDA
-# MAIL_USERNAME - REMOVIDA
-# MAIL_SCHEME - REMOVIDA
-# SESSION_DOMAIN - REMOVIDA
-# LOG_DEPRECATIONS_CHANNEL - REMOVIDA
+# DATABASE_URL - REMOVER (Railway injeta automaticamente)
+# REDIS_URL - REMOVER (Railway injeta automaticamente se Redis estiver configurado)
+# REDIS_HOST - REMOVER (Railway injeta automaticamente)
+# REDIS_PORT - REMOVER (Railway injeta automaticamente)
+# REDIS_PASSWORD - REMOVER
+# MAIL_PASSWORD - REMOVER
+# MAIL_USERNAME - REMOVER
+# MAIL_SCHEME - REMOVER
+# SESSION_DOMAIN - REMOVER
+# LOG_DEPRECATIONS_CHANNEL - REMOVER
 # ==========================================
 
