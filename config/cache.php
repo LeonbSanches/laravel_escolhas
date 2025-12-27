@@ -15,7 +15,9 @@ return [
     |
     */
 
-    'default' => env('CACHE_STORE', 'file'),
+    'default' => (env('CACHE_STORE') === 'database' && !env('DATABASE_URL')) 
+        ? 'file' 
+        : env('CACHE_STORE', env('DATABASE_URL') ? 'database' : 'file'),
 
     /*
     |--------------------------------------------------------------------------
