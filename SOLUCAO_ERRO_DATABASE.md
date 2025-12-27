@@ -18,6 +18,10 @@ Este erro indica que o Laravel está tentando conectar em `localhost` em vez de 
 - ✅ Adicionado `cache:clear` antes das migrações
 - ✅ Adicionado `config:cache` após as migrações para regenerar o cache com valores corretos
 
+## ⚠️ PROBLEMA PRINCIPAL
+
+O erro indica que **`DATABASE_URL` NÃO está sendo injetado pelo Railway**. Isso acontece quando o PostgreSQL não está conectado ao serviço web.
+
 ## 🔍 Verificações Necessárias no Railway
 
 ### Passo 1: Verificar se DATABASE_URL está disponível
@@ -26,6 +30,8 @@ Este erro indica que o Laravel está tentando conectar em `localhost` em vez de 
 2. Clique em **"Variables"** ou **"Environment Variables"**
 3. Procure por `DATABASE_URL` na lista
 4. **Se `DATABASE_URL` NÃO aparecer**, você precisa conectar o PostgreSQL ao serviço web
+
+**IMPORTANTE:** O Railway só injeta `DATABASE_URL` quando os serviços estão conectados!
 
 ### Passo 2: Conectar PostgreSQL ao Serviço Web
 
