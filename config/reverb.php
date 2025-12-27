@@ -73,14 +73,14 @@ return [
 
         'apps' => [
             [
-                'key' => env('REVERB_APP_KEY', 'railway-key'),
-                'secret' => env('REVERB_APP_SECRET', 'railway-secret'),
-                'app_id' => env('REVERB_APP_ID', 'railway-app'),
+                'key' => env('REVERB_APP_KEY', 'local'),
+                'secret' => env('REVERB_APP_SECRET', 'local'),
+                'app_id' => env('REVERB_APP_ID', 'local'),
                 'options' => [
-                    'host' => env('REVERB_HOST', 'escolhas-cba.up.railway.app'),
-                    'port' => env('REVERB_PORT', 443),
-                    'scheme' => env('REVERB_SCHEME', 'https'),
-                    'useTLS' => env('REVERB_SCHEME', 'https') === 'https',
+                    'host' => env('REVERB_HOST', 'localhost'),
+                    'port' => env('REVERB_PORT', 8080),
+                    'scheme' => env('REVERB_SCHEME', 'http'),
+                    'useTLS' => env('REVERB_SCHEME', 'http') === 'https',
                 ],
                 'allowed_origins' => ['*'],
                 'ping_interval' => env('REVERB_APP_PING_INTERVAL', 60),

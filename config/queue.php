@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'default' => env('QUEUE_CONNECTION', env('REDIS_URL') ? 'redis' : 'database'),
+    'default' => env('QUEUE_CONNECTION', 'sync'),
 
     /*
     |--------------------------------------------------------------------------
@@ -102,7 +102,7 @@ return [
     */
 
     'batching' => [
-        'database' => env('DB_CONNECTION', env('DATABASE_URL') ? (str_contains(env('DATABASE_URL', ''), 'mysql') ? 'mysql' : 'pgsql') : 'sqlite'),
+        'database' => env('DB_CONNECTION', 'sqlite'),
         'table' => 'job_batches',
     ],
 
@@ -121,7 +121,7 @@ return [
 
     'failed' => [
         'driver' => env('QUEUE_FAILED_DRIVER', 'database-uuids'),
-        'database' => env('DB_CONNECTION', env('DATABASE_URL') ? (str_contains(env('DATABASE_URL', ''), 'mysql') ? 'mysql' : 'pgsql') : 'sqlite'),
+        'database' => env('DB_CONNECTION', 'sqlite'),
         'table' => 'failed_jobs',
     ],
 
