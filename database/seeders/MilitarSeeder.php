@@ -58,7 +58,10 @@ class MilitarSeeder extends Seeder
         ];
 
         foreach ($militares as $militar) {
-            Militar::create($militar);
+            Militar::firstOrCreate(
+                ['id_func' => $militar['id_func']],
+                $militar
+            );
         }
     }
 }

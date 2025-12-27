@@ -51,7 +51,10 @@ class UnidadeSeeder extends Seeder
         ];
 
         foreach ($unidades as $unidade) {
-            Unidade::create($unidade);
+            Unidade::firstOrCreate(
+                ['nome' => $unidade['nome']],
+                $unidade
+            );
         }
     }
 }
