@@ -27,7 +27,6 @@ return [
         $databaseUrl = env('DATABASE_URL');
         if ($databaseUrl) {
             // Detecta automaticamente o tipo de banco pela URL
-            // Prioriza MySQL
             if (str_starts_with($databaseUrl, 'mysql://') || str_starts_with($databaseUrl, 'mysqlx://')) {
                 return 'mysql';
             }
@@ -35,8 +34,17 @@ return [
                 return 'pgsql';
             }
         }
-        // Default para MySQL se não houver DATABASE_URL
-        return 'mysql';
+        
+        // Se não houver DATABASE_URL, verifica variáveis específicas do banco
+        if (env('MYSQL_URL') || env('MYSQLHOST')) {
+            return 'mysql';
+        }
+        if (env('DB_HOST') && env('DB_PORT') == '5432') {
+            return 'pgsql';
+        }
+        
+        // Default para SQLite em desenvolvimento local (sem banco configurado)
+        return 'sqlite';
     })()),
 
     /*
@@ -107,11 +115,11 @@ return [
         'pgsql' => [
             'driver' => 'pgsql',
             'url' => env('DATABASE_URL') ?: env('DB_URL'),
-            'host' => env('DB_HOST'),
-            'port' => env('DB_PORT'),
-            'database' => env('DB_DATABASE'),
-            'username' => env('DB_USERNAME'),
-            'password' => env('DB_PASSWORD'),
+            'host' => env('DB_HOST', '127.0.0.1'),
+            'port' => env('DB_PORT', '5432'),
+            'database' => env('DB_DATABASE', 'laravel'),
+            'username' => env('DB_USERNAME', 'postgres'),
+            'password' => env('DB_PASSWORD', ''),
             'charset' => env('DB_CHARSET', 'utf8'),
             'prefix' => '',
             'prefix_indexes' => true,
