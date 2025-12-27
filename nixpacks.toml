@@ -1,0 +1,22 @@
+[phases.setup]
+nixPkgs = ["php.withExtensions (pe: pe.enabled ++ [])", "nginx", "libmysqlclient", "phpPackages.composer", "nodejs_18", "npm-9_x"]
+
+[phases.install]
+cmds = [
+  "mkdir -p /var/log/nginx && mkdir -p /var/cache/nginx",
+  "composer install --ignore-platform-reqs",
+  "npm i"
+]
+
+[phases.build]
+cmds = [
+  "rm -rf vendor",
+  "composer install --no-dev --no-interaction --optimize-autoloader --no-scripts",
+  "composer dump-autoload --optimize --no-dev",
+  "npm ci",
+  "npm run build"
+]
+
+[start]
+cmd = "php artisan migrate --force && php artisan config:cache && php artisan route:cache && php artisan view:cache"
+
