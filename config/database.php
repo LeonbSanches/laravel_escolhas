@@ -17,6 +17,13 @@ return [
     */
 
     'default' => env('DB_CONNECTION', (function() {
+        // Se DB_CONNECTION estiver explicitamente definido, usa ele
+        $explicitConnection = env('DB_CONNECTION');
+        if ($explicitConnection) {
+            return $explicitConnection;
+        }
+        
+        // Caso contrário, detecta pelo DATABASE_URL
         $databaseUrl = env('DATABASE_URL');
         if ($databaseUrl) {
             // Detecta automaticamente o tipo de banco pela URL
