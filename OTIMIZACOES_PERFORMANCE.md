@@ -31,11 +31,12 @@ broadcast(new EscolhaRegistrada($escolhaFresh));
 
 **Depois:**
 ```php
-broadcast(new EscolhaRegistrada($escolha))->afterResponse();
+event(new EscolhaRegistrada($escolha));
 ```
 
 **Por quê?** 
-- `afterResponse()` faz o broadcast após enviar a resposta HTTP, não bloqueando a requisição
+- `event()` dispara o evento que será transmitido via fila (assíncrono)
+- O evento já implementa `ShouldBroadcast` e usa `$broadcastQueue = 'default'`
 - Removido `fresh()` desnecessário (os relacionamentos já estão carregados)
 - Removido `shouldBroadcastNow()` do evento para usar fila
 

@@ -58,9 +58,9 @@ class OperadorController extends Controller
             return $escolha;
         });
 
-        // Disparar evento para atualização em tempo real (assíncrono)
+        // Disparar evento para atualização em tempo real (assíncrono via fila)
         try {
-            broadcast(new EscolhaRegistrada($escolha))->afterResponse();
+            event(new EscolhaRegistrada($escolha));
         } catch (\Exception $e) {
             // Erro silencioso - não interrompe o fluxo
         }
@@ -84,9 +84,9 @@ class OperadorController extends Controller
         $tempEscolha->setRelation('unidade', $unidade);
         $tempEscolha->setRelation('militar', (object)['nome' => '', 'ordem_escolha' => 0]);
         
-        // Broadcast assíncrono
+        // Broadcast assíncrono via fila
         try {
-            broadcast(new EscolhaRegistrada($tempEscolha))->afterResponse();
+            event(new EscolhaRegistrada($tempEscolha));
         } catch (\Exception $e) {
             // Erro silencioso
         }
