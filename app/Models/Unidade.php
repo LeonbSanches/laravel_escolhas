@@ -16,6 +16,8 @@ class Unidade extends Model
 
     public function vagasOcupadas(): int
     {
+        // Não usar cache aqui para evitar inconsistências
+        // O cache será limpo quando necessário
         return $this->escolhas()->count();
     }
 

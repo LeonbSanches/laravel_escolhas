@@ -58,10 +58,9 @@ class OperadorController extends Controller
             return $escolha;
         });
 
-        // Disparar evento para atualização em tempo real
+        // Disparar evento para atualização em tempo real (assíncrono)
         try {
-            $escolhaFresh = $escolha->fresh(['militar', 'unidade']);
-            broadcast(new EscolhaRegistrada($escolhaFresh));
+            broadcast(new EscolhaRegistrada($escolha))->afterResponse();
         } catch (\Exception $e) {
             // Erro silencioso - não interrompe o fluxo
         }
@@ -84,7 +83,13 @@ class OperadorController extends Controller
         $tempEscolha->unidade_id = $unidade->id;
         $tempEscolha->setRelation('unidade', $unidade);
         $tempEscolha->setRelation('militar', (object)['nome' => '', 'ordem_escolha' => 0]);
-        broadcast(new EscolhaRegistrada($tempEscolha));
+        
+        // Broadcast assíncrono
+        try {
+            broadcast(new EscolhaRegistrada($tempEscolha))->afterResponse();
+        } catch (\Exception $e) {
+            // Erro silencioso
+        }
 
         return redirect()->route('operador.index')
             ->with('success', 'Escolha removida com sucesso!');

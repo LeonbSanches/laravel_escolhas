@@ -19,16 +19,9 @@ class EscolhaRegistrada implements ShouldBroadcast
     
     /**
      * Determina se o evento deve ser transmitido imediatamente.
+     * Usando fila para não bloquear a requisição HTTP.
      */
     public $broadcastQueue = 'default';
-    
-    /**
-     * Determina se o evento deve ser transmitido de forma síncrona.
-     */
-    public function shouldBroadcastNow(): bool
-    {
-        return true; // Transmitir imediatamente, sem fila
-    }
 
     /**
      * Create a new event instance.
@@ -86,8 +79,8 @@ class EscolhaRegistrada implements ShouldBroadcast
                     'id' => $this->escolha->unidade->id,
                     'nome' => $this->escolha->unidade->nome,
                     'cidade' => $this->escolha->unidade->cidade,
-                    'vagas_disponiveis' => $this->escolha->unidade->vagasDisponiveis(),
-                    'vagas_ocupadas' => $this->escolha->unidade->vagasOcupadas(),
+                    'vagas_disponiveis' => $this->escolha->unidade->quantidade_vagas - $this->escolha->unidade->escolhas()->count(),
+                    'vagas_ocupadas' => $this->escolha->unidade->escolhas()->count(),
                     'quantidade_vagas' => $this->escolha->unidade->quantidade_vagas,
                 ],
                 'created_at' => $createdAt instanceof \DateTime ? $createdAt->toIso8601String() : now()->toIso8601String(),
