@@ -252,6 +252,93 @@
             processarEscolha(data);
         });
     }
+
+    // Função para atualizar o dashboard
+    function atualizarDashboard() {
+        fetch('{{ route("dashboard.data") }}')
+            .then(response => response.json())
+            .then(data => {
+                // Atualizar próximo militar
+                const proximoMilitarContainer = document.getElementById('proximo-militar-container');
+                if (proximoMilitarContainer) {
+                    if (data.proximoMilitar) {
+                        proximoMilitarContainer.innerHTML = `
+                            <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-4">
+                                <p class="font-semibold text-blue-800">Próximo a Escolher:</p>
+                                <p class="text-blue-700">${data.proximoMilitar.nome} (Ordem: ${data.proximoMilitar.ordem_escolha})</p>
+                            </div>
+                        `;
+                    } else {
+                        proximoMilitarContainer.innerHTML = `
+                            <div class="bg-gray-50 border-l-4 border-gray-500 p-4 mb-4">
+                                <p class="text-gray-700">Todos os militares já fizeram suas escolhas.</p>
+                            </div>
+                        `;
+                    }
+                }
+
+                // Atualizar unidades
+                data.unidades.forEach(unidade => {
+                    const unidadeDiv = document.getElementById(`unidade-${unidade.id}`);
+                    const vagasSpan = document.getElementById(`vagas-${unidade.id}`);
+                    const escolhasDiv = document.getElementById(`escolhas-${unidade.id}`);
+                    const popupVagas = document.getElementById(`popup-vagas-${unidade.id}`);
+
+                    if (unidadeDiv && vagasSpan) {
+                        // Atualizar contador de vagas
+                        vagasSpan.textContent = `${unidade.vagas_disponiveis} / ${unidade.quantidade_vagas} vagas disponíveis`;
+
+                        // Atualizar classes CSS
+                        if (unidade.tem_vagas) {
+                            unidadeDiv.className = 'border rounded-lg p-4 bg-green-50 border-green-200';
+                            vagasSpan.className = 'inline-block px-2 py-1 rounded text-sm font-semibold bg-green-200 text-green-800';
+                        } else {
+                            unidadeDiv.className = 'border rounded-lg p-4 bg-red-50 border-red-200';
+                            vagasSpan.className = 'inline-block px-2 py-1 rounded text-sm font-semibold bg-red-200 text-red-800';
+                        }
+                    }
+
+                    // Atualizar lista de escolhas
+                    if (escolhasDiv) {
+                        if (unidade.escolhas.length > 0) {
+                            escolhasDiv.innerHTML = `
+                                <p class="text-xs font-semibold text-gray-700">Escolhido por:</p>
+                                <ul class="text-xs text-gray-600 mt-1">
+                                    ${unidade.escolhas.map(escolha => 
+                                        `<li>• ${escolha.militar} (Ordem: ${escolha.ordem})</li>`
+                                    ).join('')}
+                                </ul>
+                            `;
+                        } else {
+                            escolhasDiv.innerHTML = '';
+                        }
+                    }
+
+                    // Atualizar popup do mapa
+                    if (popupVagas) {
+                        popupVagas.textContent = `${unidade.vagas_disponiveis} / ${unidade.quantidade_vagas} vagas disponíveis`;
+                        popupVagas.className = unidade.tem_vagas ? 'text-green-600' : 'text-red-600';
+                    }
+
+                    // Atualizar marcador no mapa
+                    if (markers[unidade.id]) {
+                        markers[unidade.id].setPopupContent(`
+                            <strong>${unidade.cidade}</strong><br>
+                            ${unidade.nome}<br>
+                            <span class="${unidade.tem_vagas ? 'text-green-600' : 'text-red-600'}">
+                                ${unidade.vagas_disponiveis} / ${unidade.quantidade_vagas} vagas disponíveis
+                            </span>
+                        `);
+                    }
+                });
+            })
+            .catch(error => {
+                console.error('Erro ao atualizar dashboard:', error);
+            });
+    }
+
+    // Atualizar dashboard a cada 30 segundos
+    setInterval(atualizarDashboard, 30000);
 </script>
 @endsection
 

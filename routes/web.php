@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 
 // Rotas públicas
 Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/dashboard/data', [DashboardController::class, 'getData'])->name('dashboard.data');
 
 
 // Rotas de autenticação
