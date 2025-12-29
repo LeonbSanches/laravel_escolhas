@@ -85,21 +85,15 @@
 
     // Adicionar marcadores para cada unidade
     @foreach($unidades as $unidade)
-        @if(!is_null($unidade['latitude']) && !is_null($unidade['longitude']) && $unidade['latitude'] != 0 && $unidade['longitude'] != 0)
-            (function() {
-                var lat = {{ number_format($unidade['latitude'], 8, '.', '') }};
-                var lng = {{ number_format($unidade['longitude'], 8, '.', '') }};
-                var unidadeId = {{ $unidade['id'] }};
-                console.log('Criando marcador para unidade ' + unidadeId + ' (' + {{ json_encode($unidade['cidade']) }} + '):', lat, lng);
-                markers[unidadeId] = L.marker([lat, lng]).addTo(map);
-                markers[unidadeId].bindPopup(`
-                    <strong>{{ $unidade['cidade'] }}</strong><br>
-                    {{ $unidade['nome'] }}<br>
-                    <span id="popup-vagas-{{ $unidade['id'] }}" class="{{ $unidade['tem_vagas'] ? 'text-green-600' : 'text-red-600' }}">
-                        {{ $unidade['vagas_disponiveis'] }} / {{ $unidade['quantidade_vagas'] }} vagas disponíveis
-                    </span>
-                `);
-            })();
+        @if($unidade['latitude'] && $unidade['longitude'])
+            markers[{{ $unidade['id'] }}] = L.marker([{{ $unidade['latitude'] }}, {{ $unidade['longitude'] }}]).addTo(map);
+            markers[{{ $unidade['id'] }}].bindPopup(`
+                <strong>{{ $unidade['cidade'] }}</strong><br>
+                {{ $unidade['nome'] }}<br>
+                <span id="popup-vagas-{{ $unidade['id'] }}" class="{{ $unidade['tem_vagas'] ? 'text-green-600' : 'text-red-600' }}">
+                    {{ $unidade['vagas_disponiveis'] }} / {{ $unidade['quantidade_vagas'] }} vagas disponíveis
+                </span>
+            `);
         @endif
     @endforeach
 
@@ -326,28 +320,15 @@
                         popupVagas.className = unidade.tem_vagas ? 'text-green-600' : 'text-red-600';
                     }
 
-                    // Atualizar ou criar marcador no mapa
-                    if (unidade.latitude && unidade.longitude && unidade.latitude != 0 && unidade.longitude != 0) {
-                        if (markers[unidade.id]) {
-                            // Atualizar popup do marcador existente
-                            markers[unidade.id].setPopupContent(`
-                                <strong>${unidade.cidade}</strong><br>
-                                ${unidade.nome}<br>
-                                <span class="${unidade.tem_vagas ? 'text-green-600' : 'text-red-600'}">
-                                    ${unidade.vagas_disponiveis} / ${unidade.quantidade_vagas} vagas disponíveis
-                                </span>
-                            `);
-                        } else {
-                            // Criar novo marcador se não existir
-                            markers[unidade.id] = L.marker([parseFloat(unidade.latitude), parseFloat(unidade.longitude)]).addTo(map);
-                            markers[unidade.id].bindPopup(`
-                                <strong>${unidade.cidade}</strong><br>
-                                ${unidade.nome}<br>
-                                <span class="${unidade.tem_vagas ? 'text-green-600' : 'text-red-600'}">
-                                    ${unidade.vagas_disponiveis} / ${unidade.quantidade_vagas} vagas disponíveis
-                                </span>
-                            `);
-                        }
+                    // Atualizar marcador no mapa
+                    if (markers[unidade.id]) {
+                        markers[unidade.id].setPopupContent(`
+                            <strong>${unidade.cidade}</strong><br>
+                            ${unidade.nome}<br>
+                            <span class="${unidade.tem_vagas ? 'text-green-600' : 'text-red-600'}">
+                                ${unidade.vagas_disponiveis} / ${unidade.quantidade_vagas} vagas disponíveis
+                            </span>
+                        `);
                     }
                 });
             })
